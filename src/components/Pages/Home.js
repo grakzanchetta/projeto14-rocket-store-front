@@ -1,12 +1,14 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-import logo from '../images/logo.png';
+import cart from '../images/cart.png';
 
 export default function Home (){
 
 const [pokemons, setPokemons] = useState([]);
+const navigate = useNavigate();
 
 useEffect (() => {
     async function getPokeMarket(){
@@ -37,20 +39,27 @@ function renderPokeMarket(){
 }
 
 function colocarPokemonNoCarrinho(){
-    alert("Eu Coloquei este Pokemon no Carrinho!")
+    alert("Eu Coloquei este Pokemon no Carrinho!");
 }
 
 function removerPokemonDoCarrinho(){
-    alert("Eu Removei este Pokemon do Carrinho!")
+    alert("Eu Removi este Pokemon do Carrinho!");
+}
+
+function irParaCheckout(){
+    alert("eu tou indo pro checkout!");
+    navigate('/checkout');
 }
 
 
     return (
         <Container>
             <div>
-                <img src={logo} alt="Logo" />
                 <h1>ROCKET STORE</h1>
+                <img className="cartImage" onClick={irParaCheckout}  src={cart} alt="Cart" />
+                <h3> Para prosseguir com o checkout <br/>clique na pokebola acima!</h3>
             </div>
+
              {renderPokeMarket()}
             <footer>
                 <h6>Gotta Buy 'Em All</h6>
@@ -88,12 +97,20 @@ footer {
 h1 {
     font-family: 'Bangers', cursive;
     font-size: 45px;
+    margin-bottom: 10px;
     color: #891e8c;
-    margin-bottom: 30px;
 }
 
-img {
+h3 {
+    font-family: 'Bangers', cursive;
+    font-size: 25px;
+    margin-bottom: 20px;
+    color: #891e8c;
+}
+
+.cartImage {
     height: 200px;
+    margin-bottom: 20px;
 }
 `
 const PokeContainer = styled.div`
@@ -131,6 +148,12 @@ h2 {
     font-family: 'Bangers', cursive;
     font-size: 25px;
     color: #4A4063;
+}
+
+p {
+    font-style: italic;
+    font-weight: bold;
+    color: #000000;
 }
 
 `
