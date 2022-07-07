@@ -12,7 +12,7 @@ export default function Login() {
         event.preventDefault();
         
         try {
-            await axios.post(`http://localhost:5000/login`, user);
+            await axios.post('https://projeto14-rocket-store.herokuapp.com/login', user);
             navigate('/home');
         } catch (error) {
             alert(error.response.data);
