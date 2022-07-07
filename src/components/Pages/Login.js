@@ -1,11 +1,23 @@
+import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from '../images/logo.png';
-import { login } from "../routesReq";
 
 export default function Login() {
     const [user, setUser] = useState({email: "", password: ""});
+    const navigate = useNavigate();
+
+    async function login(event) {
+        event.preventDefault();
+        
+        try {
+            await axios.post(`http://localhost:5000/login`, user);
+            navigate('/home');
+        } catch (error) {
+            alert(error.response.data);
+        }  
+    }
 
     return (
         <Container>
@@ -15,10 +27,10 @@ export default function Login() {
             </div>
             <form onSubmit={login}>
                 <input required type="email" placeholder="E-mail" value={user.email} onChange={e => setUser({...user, email: e.target.value})} />
-                <input required type="password" placeholder="Password" value={user.password} onChange={e => setUser({...user, password: e.target.value})} />
+                <input required type="password" placeholder="Senha" value={user.password} onChange={e => setUser({...user, password: e.target.value})} />
                 <button typeof="submit">Entrar</button>
             </form>
-            <Link to="sign-up" style={{ textDecoration: 'none' }}>
+            <Link to="/sign-up" style={{ textDecoration: 'none' }}>
                 <p>Não tem uma conta? Cadastre-se!</p>
             </Link>
             <footer>
