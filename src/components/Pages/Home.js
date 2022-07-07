@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+import logo from '../images/logo.png';
+
 export default function Home (){
 
 const [pokemons, setPokemons] = useState([]);
@@ -21,14 +23,34 @@ useEffect (() => {
 
 function renderPokeMarket(){
     return pokemons.map((d, index) => (
-        <>
+        <PokeContainer>
             <img src={d.image} alt="pokemon"/>
-        </>
+            <h2>{d.name}</h2>
+            <p><h4>Tipo: {d.type}</h4><br/>
+            <h4>Preço: ${d.price}</h4></p>
+            <div className="buttons">
+                <button onClick={colocarPokemonNoCarrinho}>+</button>
+                <button onClick={removerPokemonDoCarrinho}>-</button>
+            </div>
+        </PokeContainer>      
     ));
 }
 
+function colocarPokemonNoCarrinho(){
+    alert("Eu Coloquei este Pokemon no Carrinho!")
+}
+
+function removerPokemonDoCarrinho(){
+    alert("Eu Removei este Pokemon do Carrinho!")
+}
+
+
     return (
         <Container>
+            <div>
+                <img src={logo} alt="Logo" />
+                <h1>ROCKET STORE</h1>
+            </div>
              {renderPokeMarket()}
             <footer>
                 <h6>Gotta Buy 'Em All</h6>
@@ -62,4 +84,53 @@ footer {
         font-size: 6px;
     }
 }
+
+h1 {
+    font-family: 'Bangers', cursive;
+    font-size: 45px;
+    color: #891e8c;
+    margin-bottom: 30px;
+}
+
+img {
+    height: 200px;
+}
+`
+const PokeContainer = styled.div`
+
+background-color: #ffffff;
+margin-bottom: 30px;
+border-radius: 18px;
+width: 90vw;
+height: 70px;
+display: flex;
+align-items: center;
+justify-content: space-around;
+
+img {
+    height: 60px;
+}
+
+button {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    border: none;
+    font-size: 18px;
+    background-color: #783F8E;
+    color: #C8C6D7;
+    margin-right: 0.3em;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+}
+
+h2 {
+    font-family: 'Bangers', cursive;
+    font-size: 25px;
+    color: #4A4063;
+}
+
 `
