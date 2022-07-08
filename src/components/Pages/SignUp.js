@@ -14,7 +14,7 @@ export default function SignUp() {
         event.preventDefault();
         
         try {
-            await axios.post(`https://projeto14-rocket-store.herokuapp.com/sign-up`, user);
+            await axios.post(`https://projeto-rocket-store.herokuapp.com/sign-up`, user);
             navigate('/');
         } catch (error) {
             alert(error.response.data);

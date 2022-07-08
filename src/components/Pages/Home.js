@@ -13,7 +13,7 @@ const navigate = useNavigate();
 useEffect (() => {
     async function getPokeMarket(){
         try{
-            const {data} = await axios.get('http://localhost:5000/home');
+            const {data} = await axios.get('https://projeto-rocket-store.herokuapp.com/home');
             console.log(data);
             setPokemons(data);
         } catch (error) {
