@@ -57,7 +57,7 @@ function irParaCheckout(){
             <div>
                 <h1>ROCKET STORE</h1>
                 <img className="cartImage" onClick={irParaCheckout}  src={cart} alt="Cart" />
-                <h3> Para prosseguir com o checkout <br/>clique na pokebola acima!</h3>
+                <h3> Para prosseguir com o checkout <br/>clique na pokebola!</h3>
             </div>
 
              {renderPokeMarket()}
