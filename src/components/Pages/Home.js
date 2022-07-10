@@ -16,6 +16,7 @@ export default function Home (){
 
     useEffect (() => {
         async function getPokeMarket(){
+            console.log(token)
             try{
                 const {data} = await axios.get('https://projeto-rocket-store.herokuapp.com/home', token);
                 setPokemons(data);
