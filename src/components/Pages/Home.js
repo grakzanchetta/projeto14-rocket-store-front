@@ -56,11 +56,15 @@ export default function Home (){
     }
 
     function removerPokemonDoCarrinho(index){
-        alert("Eu Removi este Pokemon do Carrinho!");
+        if(cart[index].amount && cart[index].amount > 0) {
+            setCart(cart, cart[index].amount = cart[index].amount - 1);
+            delete cart[index]._id;
+            delete cart[index].type;
+            updateCart(cart.filter(e => e.amount));
+        }
     }
 
     async function updateCart(cart) {
-        console.log(cart)
         try {
             if(cartId) {
                 await axios.put('https://projeto-rocket-store.herokuapp.com/cart', {
