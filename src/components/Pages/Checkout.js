@@ -1,14 +1,46 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-import cart from '../images/cart.png';
+import axios from 'axios';
+
+import cartImg from '../images/cart.png';
 
 export default function Checkout() {
-
     const [buyerTicket, setBuyerTicket] = useState({ name: "", card: "", cvv: "", valid: "" });
+    const [cart, setCart] = useState([]);
     
 
+    useEffect (() => {
+        async function getCart(){
+            try{
+                const {data} = await axios.get('https://projeto-rocket-store.herokuapp.com/cart');
+                console.log(data);
+                setCart(data);
+            } catch (error) {
+                console.error(error.response);
+            }
+        }
+        getCart();
+    }, []);
 
+    function renderPokeCart(){
+
+        let total = cart.reduce(getTotal, 0);
+        function getTotal(total, item) {
+        return total + (item.price * item.amount);
+        }
+
+        return cart.map((d, index) => (
+            <PokeContainer>
+                <img src={d.image} alt="pokemon"/>
+                <h2>{d.name}</h2>
+                <p><h4>Quantidade: {d.amount}</h4><br/>
+                <h4>Preço: ${d.price}</h4></p>
+                <h1>{total}</h1>
+            </PokeContainer>  
+                
+        ));
+    }
 
     function confirmarCompra() {
         alert("a compra foi confirmada!")
@@ -21,9 +53,10 @@ export default function Checkout() {
         <Container>
             <div>
                 <h1>ROCKET STORE</h1>
-                <img className="cartImage" src={cart} alt="Cart" />
+                <img className="cartImage" src={cartImg} alt="Cart" />
                 <h3> Para confirmar a compra <br />preencha os dados</h3>
             </div>
+            {renderPokeCart()}
             <form onSubmit={confirmarCompra}>
                 <input placeholder="Nome impresso no cartão" value={buyerTicket.name} onChange={e => setBuyerTicket({ ...buyerTicket, name: e.target.value })} required />
                 <input placeholder="Numero do cartão" value={buyerTicket.card} onChange={e => setBuyerTicket({ ...buyerTicket, card: e.target.value })} required />
@@ -113,4 +146,47 @@ button {
     }
 
 `
+const PokeContainer = styled.div`
 
+background-color: #ffffff;
+margin-bottom: 30px;
+border-radius: 18px;
+width: 90vw;
+height: 70px;
+display: flex;
+align-items: center;
+justify-content: space-around;
+
+img {
+    height: 60px;
+}
+
+button {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    border: none;
+    font-size: 18px;
+    background-color: #783F8E;
+    color: #C8C6D7;
+    margin-right: 0.3em;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+}
+
+h2 {
+    font-family: 'Bangers', cursive;
+    font-size: 25px;
+    color: #4A4063;
+}
+
+p {
+    font-style: italic;
+    font-weight: bold;
+    color: #000000;
+}
+
+`
