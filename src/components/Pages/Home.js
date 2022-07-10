@@ -47,8 +47,8 @@ function removerPokemonDoCarrinho(){
 }
 
 function irParaCheckout(){
-    alert("eu tou indo pro checkout!");
-    navigate('/checkout');
+    alert("eu tou indo pro carrinho!");
+    navigate('/cart');
 }
 
 
@@ -57,7 +57,7 @@ function irParaCheckout(){
             <div>
                 <h1>ROCKET STORE</h1>
                 <img className="cartImage" onClick={irParaCheckout}  src={cart} alt="Cart" />
-                <h3> Para prosseguir com o checkout <br/>clique na pokebola!</h3>
+                <h3> Para prosseguir com o carrinho <br/>clique na pokebola!</h3>
             </div>
 
              {renderPokeMarket()}
