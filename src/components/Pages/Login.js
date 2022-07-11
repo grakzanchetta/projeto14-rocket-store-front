@@ -4,11 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from '../images/logo.png';
 import TokenContext from "../contexts/TokenContext";
+import EmailContext from "../contexts/EmailContext";
 
 export default function Login() {
     const [user, setUser] = useState({email: "", password: ""});
     const navigate = useNavigate();
     const { setToken } = useContext(TokenContext);
+    const { setEmail } = useContext(EmailContext);
 
     async function login(event) {
         event.preventDefault();
@@ -16,6 +18,7 @@ export default function Login() {
         try {
             const token = await axios.post(`https://projeto-rocket-store.herokuapp.com/login`, user);
             setToken({headers: {Authorization: `Bearer ${token.data}`}});
+            setEmail(user.email);
             navigate('/home');
         } catch (error) {
             alert(error.response.data);
