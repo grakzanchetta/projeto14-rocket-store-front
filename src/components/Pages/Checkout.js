@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useState, useEffect, useContext } from "react";
 import axios from 'axios';
-
 import CartContext from "../contexts/CartContext";
 import TokenContext from "../contexts/TokenContext.js";
 import cartImg from '../images/cart.png';
@@ -10,7 +9,6 @@ export default function Checkout() {
     const [buyerTicket, setBuyerTicket] = useState({ name: "", card: "", cvv: "", valid: "" });
     const { cart, setCart } = useContext(CartContext);
     const { token } = useContext(TokenContext);
-    
 
     useEffect (() => {
         async function getCart(){
@@ -24,10 +22,19 @@ export default function Checkout() {
         getCart();
     }, []);
 
-    
+    function getTotalValue(){
+        let sum = 0;
+        if (cart.products !== undefined){
+            
+            for (let i = 0; i < cart.products.length; i++){
+                sum += (cart.products[i].amount * cart.products[i].price);
+            }
+        }
+        return (sum)
+    }
+
     function buildCart(){
         if (cart.products !== undefined){
-            console.log(cart.products);
             return cart.products.map((d, index) => (
                 <PokeContainer key={index}>
                     <img src={d.image} alt="pokemon"/>
@@ -39,9 +46,6 @@ export default function Checkout() {
         }
     }
   
-
-
-
     function confirmarCompra() {
         alert("a compra foi confirmada!")
     }
@@ -54,6 +58,7 @@ export default function Checkout() {
                 <h3> Para confirmar a compra <br />preencha os dados</h3>
             </div>
             {buildCart()}
+            <h3>Total da Compra: ${getTotalValue()}</h3>
             <form onSubmit={confirmarCompra}>
                 <input placeholder="Nome impresso no cartão" value={buyerTicket.name} onChange={e => setBuyerTicket({ ...buyerTicket, name: e.target.value })} required />
                 <input placeholder="Numero do cartão" value={buyerTicket.card} onChange={e => setBuyerTicket({ ...buyerTicket, card: e.target.value })} required />
