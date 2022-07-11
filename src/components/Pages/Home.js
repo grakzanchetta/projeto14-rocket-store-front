@@ -66,7 +66,7 @@ export default function Home (){
             updateCart(cart.filter(e => e.amount));
         }
     }
-
+    // isto é um comentário
     async function updateCart(cart) {
         try {
             if(await axios.get('https://projeto-rocket-store.herokuapp.com/cart', token)) {
