@@ -1,63 +1,103 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import TokenContext from "../contexts/TokenContext.js";
+import CartContext from "../contexts/CartContext.js";
 
-import cart from '../images/cart.png';
+import cartImg from '../images/cart.png';
 
 export default function Home (){
+    const { token } = useContext(TokenContext);
+    const { cart, setCart } = useContext(CartContext);
+    const [pokemons, setPokemons] = useState([]);
+    const [cartId, setCartId] = useState(null);
+    const navigate = useNavigate();
 
-const [pokemons, setPokemons] = useState([]);
-const navigate = useNavigate();
+    useEffect (() => {
+        
+        async function getPokeMarket(){
+            console.log(token)
+            console.log(cart);
+            try{
+                const {data} = await axios.get('https://projeto-rocket-store.herokuapp.com/home', token);
+                setPokemons(data);
+                setCart(data);
+            } catch (error) {
+                console.error(error.response);
+            }
+        }
+        getPokeMarket(); 
 
-useEffect (() => {
-    async function getPokeMarket(){
-        try{
-            const {data} = await axios.get('https://projeto-rocket-store.herokuapp.com/home');
-            console.log(data);
-            setPokemons(data);
+    }, []);
+
+    function renderPokeMarket(){
+        return pokemons.map((d, index) => (
+            <PokeContainer key={index}>
+                <img src={d.image} alt="pokemon"/>
+                <h2>{d.name}</h2>
+                <p><h4>Tipo: {d.type}</h4><br/>
+                <h4>Preço: ${d.price}</h4></p>
+                <div className="buttons">
+                    <button onClick={() => colocarPokemonNoCarrinho(index)}>+</button>
+                    <div>00</div>
+                    <button onClick={() => removerPokemonDoCarrinho(index)}>-</button>
+                </div>
+            </PokeContainer>      
+        ));
+    }
+
+    function colocarPokemonNoCarrinho(index){
+        if(cart[index].amount) {
+            setCart(cart, cart[index].amount = cart[index].amount + 1);
+            delete cart[index]._id;
+            delete cart[index].type;
+            updateCart(cart.filter(e => e.amount));
+        } else {
+            setCart(cart, cart[index].amount = 1);
+            updateCart(cart.filter(e => e.amount));
+        }
+    }
+
+    function removerPokemonDoCarrinho(index){
+        if(cart[index].amount && cart[index].amount > 0) {
+            setCart(cart, cart[index].amount = cart[index].amount - 1);
+            delete cart[index]._id;
+            delete cart[index].type;
+            updateCart(cart.filter(e => e.amount));
+        }
+    }
+
+    async function updateCart(cart) {
+        try {
+            if(cartId) {
+                await axios.put('https://projeto-rocket-store.herokuapp.com/cart', {
+                    ...cart,
+                    _id: cartId
+                } ,token);
+            } else {
+                const resp = await axios.post('https://projeto-rocket-store.herokuapp.com/cart', cart, token);
+                
+                setCartId(resp.data);
+                console.log(resp.data);
+            }
         } catch (error) {
             console.error(error.response);
         }
     }
-    getPokeMarket();
-}, []);
 
-function renderPokeMarket(){
-    return pokemons.map((d, index) => (
-        <PokeContainer>
-            <img src={d.image} alt="pokemon"/>
-            <h2>{d.name}</h2>
-            <p><h4>Tipo: {d.type}</h4><br/>
-            <h4>Preço: ${d.price}</h4></p>
-            <div className="buttons">
-                <button onClick={colocarPokemonNoCarrinho}>+</button>
-                <button onClick={removerPokemonDoCarrinho}>-</button>
-            </div>
-        </PokeContainer>      
-    ));
-}
-
-function colocarPokemonNoCarrinho(){
-    alert("Eu Coloquei este Pokemon no Carrinho!");
-}
-
-function removerPokemonDoCarrinho(){
-    alert("Eu Removi este Pokemon do Carrinho!");
-}
-
-function irParaCheckout(){
-    alert("eu tou indo pro carrinho!");
-    navigate('/cart');
-}
+    function irParaCheckout(){
+        alert("eu tou indo pro checkout!");
+        navigate('/checkout');
+    }
 
 
     return (
         <Container>
             <div>
                 <h1>ROCKET STORE</h1>
-                <img className="cartImage" onClick={irParaCheckout}  src={cart} alt="Cart" />
-                <h3> Para prosseguir com o carrinho <br/>clique na pokebola!</h3>
+                <img className="cartImage" onClick={irParaCheckout}  src={cartImg} alt="Cart" />
+                <h3> Para prosseguir com o checkout <br/>clique na pokebola acima!</h3>
             </div>
 
              {renderPokeMarket()}
@@ -137,11 +177,22 @@ button {
     background-color: #783F8E;
     color: #C8C6D7;
     margin-right: 0.3em;
+    margin-left: 0.3em;
 }
 
 .buttons {
     display: flex;
     align-items: center;
+}
+
+.buttons div {
+    background-color: #783F8E;
+    color: #C8C6D7;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
 }
 
 h2 {

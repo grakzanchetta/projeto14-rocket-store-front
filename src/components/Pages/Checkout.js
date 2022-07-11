@@ -1,13 +1,13 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
-
+import { useState, useEffect, useContext } from "react";
 import axios from 'axios';
 
+import CartContext from "../contexts/CartContext";
 import cartImg from '../images/cart.png';
 
 export default function Checkout() {
     const [buyerTicket, setBuyerTicket] = useState({ name: "", card: "", cvv: "", valid: "" });
-    const [cart, setCart] = useState([]);
+    const { cart, setCart } = useContext(CartContext);
     
 
     useEffect (() => {
@@ -45,9 +45,6 @@ export default function Checkout() {
     function confirmarCompra() {
         alert("a compra foi confirmada!")
     }
-
-
-
 
     return (
         <Container>
@@ -188,5 +185,4 @@ p {
     font-weight: bold;
     color: #000000;
 }
-
 `
