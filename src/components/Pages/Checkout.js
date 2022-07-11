@@ -54,9 +54,16 @@ export default function Checkout() {
   
     async function confirmarCompra(event) {
         event.preventDefault();
+        console.log(cart._id)
         console.log(buyerTicket)
         try {
-            await axios.post(`https://projeto-rocket-store.herokuapp.com/checkout`, buyerTicket, token);
+            await axios.post(`https://projeto-rocket-store.herokuapp.com/checkout`, {
+                id: cart._id,
+                name: buyerTicket.name,
+                card:buyerTicket.card,
+                cvv:buyerTicket.cvv,
+                valid:buyerTicket.valid
+            });
             alert('Compra concluída com sucesso!')
             navigate('/home');
         } catch (error) {
