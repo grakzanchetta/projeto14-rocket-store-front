@@ -5,13 +5,12 @@ import CartContext from "../contexts/CartContext";
 import TokenContext from "../contexts/TokenContext.js";
 import { Link, useNavigate } from "react-router-dom";
 import cartImg from '../images/cart.png';
-import EmailContext from "../contexts/EmailContext";
+import logo from '../images/logo.png';
 
 export default function Checkout() {
     const [buyerTicket, setBuyerTicket] = useState({ name: "", card: "", cvv: "", valid: "" });
     const { cart, setCart } = useContext(CartContext);
     const { token } = useContext(TokenContext);
-    const {email} = useContext(EmailContext);
     const navigate = useNavigate();
 
     useEffect (() => {
@@ -67,6 +66,7 @@ export default function Checkout() {
     return (
         <Container>
             <div>
+                <img src={logo} alt="Logo" />
                 <h1>ROCKET STORE</h1>
                 <Link to='/cart'>
                 <img className="cartImage" src={cartImg} alt="Cart" />
@@ -99,6 +99,10 @@ const Container = styled.div`
     background-color: #C8C6D7;
     padding: 60px 20px 20px 20px;
     text-align: center;
+
+    img {
+        height: 150px;
+    }
     
     h1 {
         font-family: 'Bangers', cursive;
@@ -115,7 +119,7 @@ const Container = styled.div`
     }
     
     .cartImage {
-        height: 200px;
+        height: 100px;
         margin-bottom: 20px;
     }
     form {

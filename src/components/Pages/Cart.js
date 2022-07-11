@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import TokenContext from '../contexts/TokenContext.js';
 import cartImg from '../images/cart.png';
+import logo from '../images/logo.png';
 
 export default function Cart() {
     const { token } = useContext(TokenContext);
@@ -49,6 +50,7 @@ export default function Cart() {
     return (
         <Container>
             <div>
+                <img src={logo} alt="Logo" />
                 <h1>ROCKET STORE</h1>
                 <Link to='/checkout'>
                 <img className="cartImage" src={cartImg} alt="Cart" />
@@ -75,6 +77,10 @@ const Container = styled.div`
     background-color: #C8C6D7;
     padding: 60px 20px 20px 20px;
     text-align: center;
+
+    img {
+        height: 150px;
+    }
 
 footer {
     color: #4A4063;
@@ -106,7 +112,7 @@ h3 {
 }
 
 .cartImage {
-    height: 200px;
+    height: 100px;
     margin-bottom: 20px;
 }
 `
