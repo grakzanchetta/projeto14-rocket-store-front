@@ -54,7 +54,7 @@ export default function Checkout() {
   
     async function confirmarCompra() {
         try {
-            await axios.post(`https://projeto-rocket-store.herokuapp.com/checkout`, cart);
+            await axios.post(`https://projeto-rocket-store.herokuapp.com/checkout`, cart, email, token);
             alert('Compra concluída com sucesso!')
             navigate('/home');
         } catch (error) {
