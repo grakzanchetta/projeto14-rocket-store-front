@@ -85,7 +85,7 @@ export default function Home (){
     }
 
     function irParaCheckout(){
-        navigate('/checkout');
+        navigate('/cart');
     }
 
     return (
@@ -93,7 +93,7 @@ export default function Home (){
             <div>
                 <h1>ROCKET STORE</h1>
                 <img className="cartImage" onClick={irParaCheckout}  src={cartImg} alt="Cart" />
-                <h3> Para prosseguir com o checkout <br/>clique na pokebola acima!</h3>
+                <h3> Para visualizar seus produtos <br/>clique na pokebola acima!</h3>
             </div>
 
              {renderPokeMarket()}
