@@ -86,8 +86,8 @@ export default function Home (){
     }
 
     function irParaCheckout(){
-        alert("eu tou indo pro checkout!");
-        navigate('/checkout');
+        alert("eu tou indo pro cart!");
+        navigate('/cart');
     }
 
 
