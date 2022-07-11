@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import axios from 'axios';
 import CartContext from "../contexts/CartContext";
 import TokenContext from "../contexts/TokenContext.js";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import cartImg from '../images/cart.png';
 import EmailContext from "../contexts/EmailContext";
 
@@ -52,9 +52,11 @@ export default function Checkout() {
         
     }
   
-    async function confirmarCompra() {
+    async function confirmarCompra(event) {
+        event.preventDefault();
+        console.log(buyerTicket)
         try {
-            await axios.post(`https://projeto-rocket-store.herokuapp.com/checkout`, cart, email, token);
+            await axios.post(`https://projeto-rocket-store.herokuapp.com/checkout`, buyerTicket, token);
             alert('Compra concluída com sucesso!')
             navigate('/home');
         } catch (error) {
@@ -66,8 +68,10 @@ export default function Checkout() {
         <Container>
             <div>
                 <h1>ROCKET STORE</h1>
+                <Link to='/cart'>
                 <img className="cartImage" src={cartImg} alt="Cart" />
-                <h3> Para confirmar a compra <br />preencha os dados</h3>
+                </Link>
+                <h3> Para voltar ao carrinho <br />clique na pokebola acima!</h3>
             </div>
             {buildCart()}
             <h3>Total da Compra: $ {getTotalValue()}</h3>
@@ -153,6 +157,7 @@ button {
         font-family: 'Noto Sans JP', sans-serif;
         font-size: 6px;
     }
+}
 `
 const PokeContainer = styled.div`
 background-color: #ffffff;
@@ -163,6 +168,7 @@ height: 70px;
 display: flex;
 align-items: center;
 justify-content: space-around;
+
 img {
     height: 60px;
 }
@@ -189,4 +195,5 @@ p {
     font-style: italic;
     font-weight: bold;
     color: #000000;
+}
 `
