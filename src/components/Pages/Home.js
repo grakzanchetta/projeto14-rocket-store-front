@@ -66,37 +66,34 @@ export default function Home (){
             updateCart(cart.filter(e => e.amount));
         }
     }
-
+    // isto é um comentário
     async function updateCart(cart) {
         try {
             if(await axios.get('https://projeto-rocket-store.herokuapp.com/cart', token)) {
+               
                 await axios.put('https://projeto-rocket-store.herokuapp.com/cart', {
-                    products: [...cart],
-                    email: email
+                    email: email, products: [...cart]    
                 } ,token);
             } else {
                 await axios.post('https://projeto-rocket-store.herokuapp.com/cart', {
                     email: email, products: [...cart]
                 }, token);
             }
-            console.log('foi?')
         } catch (error) {
             console.error(error.response);
         }
     }
 
     function irParaCheckout(){
-        alert("eu tou indo pro cart!");
         navigate('/cart');
     }
-
 
     return (
         <Container>
             <div>
                 <h1>ROCKET STORE</h1>
                 <img className="cartImage" onClick={irParaCheckout}  src={cartImg} alt="Cart" />
-                <h3> Para prosseguir com o checkout <br/>clique na pokebola acima!</h3>
+                <h3> Para visualizar seus produtos <br/>clique na pokebola acima!</h3>
             </div>
 
              {renderPokeMarket()}

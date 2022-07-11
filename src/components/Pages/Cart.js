@@ -3,27 +3,65 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import TokenContext from '../contexts/TokenContext.js';
+import cartImg from '../images/cart.png';
 
 export default function Cart() {
     const { token } = useContext(TokenContext);
     const [cart, setCart] = useState([]);
 
-    useEffect(() => {
-        axios.get('https://projeto-rocket-store.herokuapp.com/cart', token).then(resp => setCart(resp.data.products)).catch(resp => console.log(resp));
+    useEffect (() => {
+        async function getCart(){
+            try{
+                const {data} = await axios.get('https://projeto-rocket-store.herokuapp.com/cart', token);
+                setCart(data);
+            } catch (error) {
+                console.error(error.response);
+            }
+        }
+        getCart();
     }, []);
+
+    function getTotalValue(){
+        let sum = 0;
+        if (cart.products !== undefined){
+            
+            for (let i = 0; i < cart.products.length; i++){
+                sum += (cart.products[i].amount * cart.products[i].price);
+            }
+        }
+        return (sum)
+    }
+
+    function buildCart(){
+        if (cart.products !== undefined){
+            return cart.products.map((d, index) => (
+                <PokeContainer key={index}>
+                    <img src={d.image} alt="pokemon"/>
+                    <h2>{d.name}</h2>
+                    <p><h4>Quantidade: {d.amount}</h4><br/>
+                    <h4>Preço: ${d.price}</h4></p>
+                </PokeContainer>      
+            ));
+        }
+        
+    }
 
     return (
         <Container>
-            {cart.map((item, index) => {
-                <PokeContainer key={index}>
-                    <img src={item.image} alt={item.name}/>
-                    <h2>{item.name}</h2>
-                    <p>Preço: ${item.price}</p>
-                    <div>00</div>
-                </PokeContainer>
-            })}
-            <Link to='/checkout'>Ir para check-out </Link>
+            <div>
+                <h1>ROCKET STORE</h1>
+                <Link to='/checkout'>
+                <img className="cartImage" src={cartImg} alt="Cart" />
+                </Link>
+                <h3> Para ir para o pagamento <br />clique na pokebola acima!</h3>
+            </div>
+            {buildCart()}
+            <h3>Total da Compra: $ {getTotalValue()}</h3>
             <Link to='/home'>Continuar comprando</Link>
+            <footer>
+                <h6>Gotta Buy 'Em All</h6>
+                <p>ポケモンに害はありませんでした、<br /> このウェブサイトの作成中。</p>
+            </footer>
         </Container>
     )
 }
@@ -38,11 +76,42 @@ const Container = styled.div`
     padding: 60px 20px 20px 20px;
     text-align: center;
 
+footer {
+    color: #4A4063;
 
+    h6 {
+    margin-bottom: 10px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    }
+
+    p {
+        font-family: 'Noto Sans JP', sans-serif;
+        font-size: 6px;
+    }
+}
+
+h1 {
+    font-family: 'Bangers', cursive;
+    font-size: 45px;
+    margin-bottom: 10px;
+    color: #891e8c;
+}
+
+h3 {
+    font-family: 'Bangers', cursive;
+    font-size: 25px;
+    margin-bottom: 20px;
+    color: #891e8c;
+}
+
+.cartImage {
+    height: 200px;
+    margin-bottom: 20px;
+}
 `
 
 const PokeContainer = styled.div`
-
 background-color: #ffffff;
 margin-bottom: 30px;
 border-radius: 18px;
@@ -55,7 +124,6 @@ justify-content: space-around;
 img {
     height: 60px;
 }
-
 button {
     height: 25px;
     width: 25px;
@@ -65,19 +133,19 @@ button {
     background-color: #783F8E;
     color: #C8C6D7;
     margin-right: 0.3em;
-    margin-left: 0.3em;
 }
-
+.buttons {
+    display: flex;
+    align-items: center;
+}
 h2 {
     font-family: 'Bangers', cursive;
     font-size: 25px;
     color: #4A4063;
 }
-
 p {
     font-style: italic;
     font-weight: bold;
     color: #000000;
 }
-
 `
