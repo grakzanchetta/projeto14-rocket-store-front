@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import TokenContext from "../contexts/TokenContext.js";
 import CartContext from "../contexts/CartContext.js";
 import EmailContext from "../contexts/EmailContext.js";
+import logo from '../images/logo.png';
 
 import cartImg from '../images/cart.png';
 
@@ -13,7 +14,6 @@ export default function Home (){
     const { cart, setCart } = useContext(CartContext);
     const { email } = useContext(EmailContext);
     const [pokemons, setPokemons] = useState([]);
-    const navigate = useNavigate();
 
     useEffect (() => {
         async function getPokeMarket(){
@@ -84,15 +84,14 @@ export default function Home (){
         }
     }
 
-    function irParaCheckout(){
-        navigate('/cart');
-    }
-
     return (
         <Container>
             <div>
+                <img src={logo} alt="Logo" />
                 <h1>ROCKET STORE</h1>
-                <img className="cartImage" onClick={irParaCheckout}  src={cartImg} alt="Cart" />
+                <Link to='/cart'>
+                    <img className="cartImage" src={cartImg} alt="Cart" />
+                </Link>
                 <h3> Para visualizar seus produtos <br/>clique na pokebola acima!</h3>
             </div>
 
@@ -114,6 +113,10 @@ const Container = styled.div`
     background-color: #C8C6D7;
     padding: 60px 20px 20px 20px;
     text-align: center;
+
+    img {
+        height: 150px;
+    }
 
 footer {
     color: #4A4063;
@@ -145,7 +148,7 @@ h3 {
 }
 
 .cartImage {
-    height: 200px;
+    height: 100px;
     margin-bottom: 20px;
 }
 `
