@@ -4,21 +4,25 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import TokenContext from "../contexts/TokenContext.js";
 import CartContext from "../contexts/CartContext.js";
+import EmailContext from "../contexts/EmailContext.js";
 
 import cartImg from '../images/cart.png';
 
 export default function Home (){
     const { token } = useContext(TokenContext);
     const { cart, setCart } = useContext(CartContext);
+    const { email } = useContext(EmailContext);
     const [pokemons, setPokemons] = useState([]);
-    const [cartId, setCartId] = useState(null);
     const navigate = useNavigate();
 
     useEffect (() => {
         
         async function getPokeMarket(){
+<<<<<<< HEAD
             console.log(token)
             console.log(cart);
+=======
+>>>>>>> 920416a28984e0183d354adff1d3987fb6afebce
             try{
                 const {data} = await axios.get('https://projeto-rocket-store.herokuapp.com/home', token);
                 setPokemons(data);
@@ -54,6 +58,8 @@ export default function Home (){
             delete cart[index].type;
             updateCart(cart.filter(e => e.amount));
         } else {
+            delete cart[index]._id;
+            delete cart[index].type;
             setCart(cart, cart[index].amount = 1);
             updateCart(cart.filter(e => e.amount));
         }
@@ -70,17 +76,24 @@ export default function Home (){
 
     async function updateCart(cart) {
         try {
-            if(cartId) {
+            if(await axios.get('https://projeto-rocket-store.herokuapp.com/cart', token)) {
                 await axios.put('https://projeto-rocket-store.herokuapp.com/cart', {
-                    ...cart,
-                    _id: cartId
+                    products: [...cart],
+                    email: email
                 } ,token);
             } else {
+<<<<<<< HEAD
                 const resp = await axios.post('https://projeto-rocket-store.herokuapp.com/cart', cart, token);
                 
                 setCartId(resp.data);
                 console.log(resp.data);
+=======
+                await axios.post('https://projeto-rocket-store.herokuapp.com/cart', {
+                    email: email, products: [...cart]
+                }, token);
+>>>>>>> 920416a28984e0183d354adff1d3987fb6afebce
             }
+            console.log('foi?')
         } catch (error) {
             console.error(error.response);
         }
