@@ -10,11 +10,23 @@ import logo from '../images/logo.png';
 export default function Checkout() {
     const [buyerTicket, setBuyerTicket] = useState({ name: "", card: "", cvv: "", valid: "" });
     const { cart, setCart } = useContext(CartContext);
-    const { token } = useContext(TokenContext);
+    const { token, setToken } = useContext(TokenContext);
     const navigate = useNavigate();
+
+    async function renderAuths() {
+        const storageToken = localStorage.getItem("token");
+
+        if(!token && !storageToken) {
+            navigate('/');
+        }
+        if(!token) {
+            await setToken(JSON.parse(storageToken));
+        }
+    }
 
     useEffect (() => {
         async function getCart(){
+            renderAuths();
             try{
                 const {data} = await axios.get('https://projeto-rocket-store.herokuapp.com/cart', token);
                 setCart(data);

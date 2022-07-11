@@ -18,7 +18,9 @@ export default function Login() {
         try {
             const token = await axios.post(`https://projeto-rocket-store.herokuapp.com/login`, user);
             setToken({headers: {Authorization: `Bearer ${token.data}`}});
+            localStorage.setItem("token", JSON.stringify({headers: {Authorization: `Bearer ${token.data}`}}));
             setEmail(user.email);
+            localStorage.setItem("email", user.email);
             navigate('/home');
         } catch (error) {
             alert(error.response.data);

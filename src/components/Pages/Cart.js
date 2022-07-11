@@ -1,17 +1,30 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import TokenContext from '../contexts/TokenContext.js';
 import cartImg from '../images/cart.png';
 import logo from '../images/logo.png';
 
 export default function Cart() {
-    const { token } = useContext(TokenContext);
+    const { token, setToken } = useContext(TokenContext);
     const [cart, setCart] = useState([]);
+    const navigate = useNavigate();
+
+    async function renderAuths() {
+        const storageToken = localStorage.getItem("token");
+
+        if(!token && !storageToken) {
+            navigate('/');
+        }
+        if(!token) {
+            await setToken(JSON.parse(storageToken));
+        }
+    }
 
     useEffect (() => {
         async function getCart(){
+            renderAuths();
             try{
                 const {data} = await axios.get('https://projeto-rocket-store.herokuapp.com/cart', token);
                 setCart(data);

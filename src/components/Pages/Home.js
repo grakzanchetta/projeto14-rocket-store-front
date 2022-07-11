@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TokenContext from "../contexts/TokenContext.js";
 import CartContext from "../contexts/CartContext.js";
 import EmailContext from "../contexts/EmailContext.js";
@@ -10,13 +10,28 @@ import logo from '../images/logo.png';
 import cartImg from '../images/cart.png';
 
 export default function Home (){
-    const { token } = useContext(TokenContext);
+    const { token, setToken } = useContext(TokenContext);
     const { cart, setCart } = useContext(CartContext);
-    const { email } = useContext(EmailContext);
+    const { email, setEmail } = useContext(EmailContext);
     const [pokemons, setPokemons] = useState([]);
+    const navigate = useNavigate();
+
+    async function renderAuths() {
+        const storageToken = localStorage.getItem("token");
+        const storageEmail = localStorage.getItem("email");
+
+        if(!token && !storageToken) {
+            navigate('/');
+        }
+        if(!token) {
+            await setToken(JSON.parse(storageToken));
+            await setEmail(storageEmail);
+        }
+    }
 
     useEffect (() => {
         async function getPokeMarket(){
+            renderAuths();
             try{
                 const {data} = await axios.get('https://projeto-rocket-store.herokuapp.com/home', token);
                 setPokemons(data);
@@ -26,7 +41,7 @@ export default function Home (){
             }
         }
         getPokeMarket();
-    }, []);
+    }, [token]);
 
     function renderPokeMarket(){
         return pokemons.map((d, index) => (
