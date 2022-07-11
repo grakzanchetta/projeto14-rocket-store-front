@@ -3,12 +3,16 @@ import { useState, useEffect, useContext } from "react";
 import axios from 'axios';
 import CartContext from "../contexts/CartContext";
 import TokenContext from "../contexts/TokenContext.js";
+import { useNavigate } from "react-router-dom";
 import cartImg from '../images/cart.png';
+import EmailContext from "../contexts/EmailContext";
 
 export default function Checkout() {
     const [buyerTicket, setBuyerTicket] = useState({ name: "", card: "", cvv: "", valid: "" });
     const { cart, setCart } = useContext(CartContext);
     const { token } = useContext(TokenContext);
+    const {email} = useContext(EmailContext);
+    const navigate = useNavigate();
 
     useEffect (() => {
         async function getCart(){
@@ -20,6 +24,7 @@ export default function Checkout() {
             }
         }
         getCart();
+        console.log(cart)
     }, []);
 
     function getTotalValue(){
@@ -44,10 +49,17 @@ export default function Checkout() {
                 </PokeContainer>      
             ));
         }
+        
     }
   
-    function confirmarCompra() {
-        alert("a compra foi confirmada!")
+    async function confirmarCompra() {
+        try {
+            await axios.post(`https://projeto-rocket-store.herokuapp.com/checkout`, cart);
+            alert('Compra concluída com sucesso!')
+            navigate('/home');
+        } catch (error) {
+            alert(error.response.data);
+        }  
     }
 
     return (
@@ -58,7 +70,7 @@ export default function Checkout() {
                 <h3> Para confirmar a compra <br />preencha os dados</h3>
             </div>
             {buildCart()}
-            <h3>Total da Compra: ${getTotalValue()}</h3>
+            <h3>Total da Compra: $ {getTotalValue()}</h3>
             <form onSubmit={confirmarCompra}>
                 <input placeholder="Nome impresso no cartão" value={buyerTicket.name} onChange={e => setBuyerTicket({ ...buyerTicket, name: e.target.value })} required />
                 <input placeholder="Numero do cartão" value={buyerTicket.card} onChange={e => setBuyerTicket({ ...buyerTicket, card: e.target.value })} required />
@@ -128,6 +140,7 @@ button {
     background-color: #783F8E;
     color: #C8C6D7;
     margin-top: 30px;
+    margin-bottom: 20px;
 }
     footer {
     color: #4A4063;
